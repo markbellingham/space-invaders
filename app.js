@@ -89,35 +89,28 @@
         function moveLaser() {
             squares[currentLaserIndex].classList.remove('laser');
             currentLaserIndex -= width;
-            squares[currentLaserIndex].classList.add('laser');
-            if(squares[currentLaserIndex].classList.contains('invader')) {
-                squares[currentLaserIndex].classList.remove('laser');
-                squares[currentLaserIndex].classList.remove('invader');
-                squares[currentLaserIndex].classList.add('boom');
-                setTimeout(() => squares[currentLaserIndex].classList.remove('boom'), 250);
+            if(currentLaserIndex > 0) {
+                squares[currentLaserIndex].classList.add('laser');
+                if(squares[currentLaserIndex].classList.contains('invader')) {
+                    squares[currentLaserIndex].classList.remove('laser');
+                    squares[currentLaserIndex].classList.remove('invader');
+                    squares[currentLaserIndex].classList.add('boom');
+                    setTimeout(() => squares[currentLaserIndex].classList.remove('boom'), 250);
+                    clearInterval(laserId);
+                    const alienTakeDown = alienInvaders.indexOf(currentLaserIndex);
+                    alienInvadersTakenDown.push(alienTakeDown);
+                    result++;
+                    resultDisplay.textContent = result.toString();
+                }
+            } else {
                 clearInterval(laserId);
-                const alienTakeDown = alienInvaders.indexOf(currentLaserIndex);
-                alienInvadersTakenDown.push(alienTakeDown);
-                result++;
-                resultDisplay.textContent = result.toString();
             }
-        }
-
-        if(currentLaserIndex < width) {
-            clearInterval(laserId);
-            setTimeout(() => squares[currentLaserIndex].classList.remove('laser'), 100);
         }
 
         switch(e.key) {
             case ' ':
                 laserId = setInterval(moveLaser, 100);
         }
-
-        // document.addEventListener('keyup', e => {
-        //     if(e.key === ' ') {
-        //
-        //     }
-        // });
     }
     document.addEventListener('keyup', shoot);
 }())
