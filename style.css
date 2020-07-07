@@ -45,3 +45,32 @@ body {
 .laser {
     background-color: orange;
 }
+
+.modal {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -20%);
+    background-color: white;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 20px;
+    border: 5px solid black;
+    text-align: center;
+    display: none;
+}
+
+#start-button {
+    background-color: blue;
+    color: white;
+}
+
+#instructions-button {
+    margin-top: 10px;
+    background-color: blue;
+    color: white;
+}
+
+#congrats-message {
+    color: red;
+}

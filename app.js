@@ -1,6 +1,8 @@
 (function() {
    const squares =  document.querySelectorAll('.grid div');
    const resultDisplay = document.querySelector('#result');
+   const gameOverDisplay = document.getElementById('game-over-div');
+   const congratsMessage = document.querySelector('#congrats-message');
    let width = 15;
    let currentShooterIndex = 202;
    let currentInvaderIndex = 0;
@@ -21,6 +23,7 @@
     // draw the alien invaders
     function drawGameStart() {
         if(gameEnded) {
+            congratsMessage.innerHTML = '';
             alienInvaders.forEach( invader => squares[currentInvaderIndex + invader].classList.add('invader'));
         }
         invaderId = setInterval(moveInvaders, 500);
@@ -80,7 +83,8 @@
 
         // decide if game is over
         if(squares[currentShooterIndex].classList.contains('invader','shooter')) {
-            resultDisplay.textContent = 'Game Over';
+            congratsMessage.innerHTML = "You've Been Hit!"
+            gameOverDisplay.style.display = 'block';
             squares[currentShooterIndex].classList.add('boom');
             clearInterval(invaderId);
             gameEnded = true;
@@ -89,7 +93,8 @@
 
         for(let i = 0; i < alienInvaders.length; i++) {
             if(alienInvaders[i] > (squares.length - (width - 1))) {
-                resultDisplay.textContent = 'Game Over';
+                congratsMessage.innerHTML = "The Aliens Have Taken Over!"
+                gameOverDisplay.style.display = 'block';
                 clearInterval(invaderId);
                 gameEnded = true;
                 gameInPlay = false;
@@ -98,7 +103,8 @@
 
         // decide a win
         if(alienInvadersTakenDown.length === alienInvaders.length) {
-            resultDisplay.textContent = 'You Win!';
+            congratsMessage.innerHTML = "You Win!"
+            gameOverDisplay.style.display = 'block';
             clearInterval(invaderId);
             gameEnded = true;
             gameInPlay = false;
@@ -152,5 +158,15 @@
             gameInPlay = true;
             drawGameStart();
         }
+    });
+
+    // close any open modals
+    const closeBtn = document.querySelectorAll('.close-btn');
+    closeBtn.forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.modal').forEach(el => {
+                el.style.display = 'none';
+            });
+        });
     });
 }());
