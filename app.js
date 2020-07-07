@@ -2,8 +2,10 @@
    const squares =  document.querySelectorAll('.grid div');
    const resultDisplay = document.querySelector('#result');
    const gameOverDisplay = document.getElementById('game-over-div');
+   const defeatMessage = document.querySelector('#defeat-message');
    const congratsMessage = document.querySelector('#congrats-message');
    const levelDisplay = document.querySelector('#level');
+   const topScores = JSON.parse(localStorage.getItem('spaceinvaders')) || [];
    let width = 15;
    let currentShooterIndex = 202;
    let currentInvaderIndex = 0;
@@ -15,6 +17,7 @@
    let gameInPlay = false;
    let gameEnded = true;
    let level = 1;
+    showTopScores();
 
    // define the alien invaders
     function resetAlienInvaders() {
@@ -97,33 +100,63 @@
 
         // decide if game is over
         if(squares[currentShooterIndex].classList.contains('invader','shooter')) {
-            congratsMessage.innerHTML = "You've Been Hit!"
-            gameOverDisplay.style.display = 'block';
+            defeatMessage.innerHTML = "You've Been Hit!"
             squares[currentShooterIndex].classList.add('boom');
-            clearInterval(invaderId);
-            gameEnded = true;
-            gameInPlay = false;
+            showGameOverModal();
         }
 
         for(let i = 0; i < alienInvaders.length; i++) {
             if(alienInvaders[i] > (squares.length - (width - 1))) {
-                congratsMessage.innerHTML = "The Aliens Have Taken Over!"
-                gameOverDisplay.style.display = 'block';
-                clearInterval(invaderId);
-                gameEnded = true;
-                gameInPlay = false;
+                defeatMessage.innerHTML = "The Aliens Have Taken Over!"
+                showGameOverModal();
+                break;
             }
         }
 
         // decide a win
         if(alienInvadersTakenDown.length === alienInvaders.length) {
-            // congratsMessage.innerHTML = "You Win!"
-            // gameOverDisplay.style.display = 'block';
             clearInterval(invaderId);
             level++;
             gameEnded = true;
             drawGameStart();
         }
+    }
+
+    function showGameOverModal() {
+        const date = getDate();
+        const scoreInfo = {date: date, score: result, level: level};
+        topScores.push(scoreInfo);
+        const index = showTopScores(scoreInfo);
+        clearInterval(invaderId);
+        gameEnded = true;
+        gameInPlay = false;
+        congratsMessage.innerHTML = index > -1 ? `Congrats #${index + 1} score!` : '';
+        gameOverDisplay.style.display = 'block';
+    }
+
+    function getDate() {
+        let date = new Date();
+        date = date.toISOString().split('T')[0];
+        date = date.split('-');
+        date = `${date[2]}-${date[1]}-${date[0]}`;
+        return date;
+    }
+
+    function showTopScores(scoreInfo) {
+        topScores.sort((a, b) => b.score - a.score);
+        const topFive = topScores.filter((item, index) => index < 5);
+        localStorage.spaceinvaders = JSON.stringify(topFive);
+        const index = topFive.findIndex( s => s === scoreInfo );
+        let markup = '';
+        topFive.forEach( s => {
+            markup += `
+            <tr>
+                <td class="scores" nowrap="nowrap">${s.date}</td><td class="scores">${s.level}</td><td class="scores">${s.score}</td>
+            </tr>
+            `;
+        });
+        document.querySelector('#top-scores').innerHTML = markup;
+        return index;
     }
 
     // shoot at aliens

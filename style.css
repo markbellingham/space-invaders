@@ -71,6 +71,12 @@ body {
     color: white;
 }
 
-#congrats-message {
+#defeat-message {
     color: red;
+}
+
+.scores {
+    width: 100px;
+    text-align: right;
+    font-size: 0.9em;
 }

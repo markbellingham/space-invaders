@@ -24,9 +24,24 @@
     <h3>Level: <span id="level"></span></h3>
     <button id="start-btn">Start/Pause</button>
     <H3>Top Scores</H3>
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Level</th>
+                <th>Score</th>
+            </tr>
+            </thead>
+            <tbody id="top-scores">
+
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div id="game-over-div" class="modal">
+    <h3 id="defeat-message"></h3>
     <h3 id="congrats-message"></h3>
     <h3>Game Over</h3>
     <button id="game-over-close" class="close-btn">Close</button>
