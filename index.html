@@ -9,14 +9,20 @@
     <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-<h3>Score: <span id="result"></span></h3>
-<div class="grid">
-    <!-- 15x15 is 225 divs -->
-    <script>
-        for(let i = 0; i < 225; i++) {
-            document.write('<div></div>');
-        }
-    </script>
+<div class="left">
+    <div class="grid">
+        <!-- 15x15 is 225 divs -->
+        <script>
+            for(let i = 0; i < 225; i++) {
+                document.write('<div></div>');
+            }
+        </script>
+    </div>
+</div>
+<div class="right">
+    <h3>Score: <span id="result">0</span></h3>
+    <button id="start-btn">Start/Pause</button>
+    <H3>Top Scores</H3>
 </div>
 
 
