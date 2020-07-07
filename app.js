@@ -3,30 +3,44 @@
    const resultDisplay = document.querySelector('#result');
    const gameOverDisplay = document.getElementById('game-over-div');
    const congratsMessage = document.querySelector('#congrats-message');
+   const levelDisplay = document.querySelector('#level');
    let width = 15;
    let currentShooterIndex = 202;
    let currentInvaderIndex = 0;
+   let alienInvaders = [];
    let alienInvadersTakenDown = [];
    let result = 0;
    let direction = 1;
    let invaderId;
    let gameInPlay = false;
-   let gameEnded = false;
+   let gameEnded = true;
+   let level = 1;
 
    // define the alien invaders
-    const alienInvaders = [
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-        15,16,17,18,19,20,21,22,23,24,
-        30,31,32,33,34,35,36,37,38,39
-    ];
+    function resetAlienInvaders() {
+        alienInvaders = [
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+            15,16,17,18,19,20,21,22,23,24,
+            30,31,32,33,34,35,36,37,38,39
+        ];
+    }
 
     // draw the alien invaders
     function drawGameStart() {
         if(gameEnded) {
             congratsMessage.innerHTML = '';
-            alienInvaders.forEach( invader => squares[currentInvaderIndex + invader].classList.add('invader'));
+            currentInvaderIndex = 0;
+            direction = 1;
+            resetAlienInvaders();
+            alienInvadersTakenDown = [];
+            alienInvaders.forEach( invader => {
+                squares[currentInvaderIndex + invader].classList.add('invader')
+            });
+            gameEnded = false;
         }
-        invaderId = setInterval(moveInvaders, 500);
+        levelDisplay.innerHTML = level.toString();
+        const speed = (Math.log10(Math.pow(level,-0.5))+1)*1000;
+        invaderId = setInterval(moveInvaders, speed);
     }
 
     function keyPressEvents(e) {
@@ -103,11 +117,12 @@
 
         // decide a win
         if(alienInvadersTakenDown.length === alienInvaders.length) {
-            congratsMessage.innerHTML = "You Win!"
-            gameOverDisplay.style.display = 'block';
+            // congratsMessage.innerHTML = "You Win!"
+            // gameOverDisplay.style.display = 'block';
             clearInterval(invaderId);
+            level++;
             gameEnded = true;
-            gameInPlay = false;
+            drawGameStart();
         }
     }
 
@@ -130,7 +145,7 @@
                     clearInterval(laserId);
                     const alienTakeDown = alienInvaders.indexOf(currentLaserIndex);
                     alienInvadersTakenDown.push(alienTakeDown);
-                    result++;
+                    result += 10 + level - 1;
                     resultDisplay.textContent = result.toString();
                 }
             } else {
@@ -151,12 +166,12 @@
                 squares.forEach(square => {
                     square.classList.remove('invader');
                 });
-                gameEnded = false;
                 result = 0;
                 resultDisplay.textContent = result.toString();
+                resetAlienInvaders();
             }
-            gameInPlay = true;
             drawGameStart();
+            gameInPlay = true;
         }
     });
 
